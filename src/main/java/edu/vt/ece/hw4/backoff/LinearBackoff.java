@@ -1,11 +1,11 @@
 package edu.vt.ece.hw4.backoff;
 
-public class ExponentialBackoff implements Backoff {
+public class LinearBackoff implements Backoff{
 
     @Override
     public void backoff(int a) throws InterruptedException {
-        int delay = (int)Math.pow(2,a);
+        int delay = a;
         Thread.sleep(delay);
     }
-
 }
+

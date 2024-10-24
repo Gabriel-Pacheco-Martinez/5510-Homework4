@@ -18,17 +18,18 @@ public class BackoffLock implements Lock {
     @Override
     public void lock() {
         Backoff backoff = BackoffFactory.getBackoff(this.backoffStrategy);
+        int attempts = 1;
         while (true) {
-            while (state.get()) {
-            }
+            while (state.get()) {}
             if (!state.getAndSet(true)) { // try to acquire lock
                 return;
             } else {            // backoff on failure
                 try {
-                    backoff.backoff();
+                    backoff.backoff(attempts);
                 } catch (InterruptedException ignored) {
                 }
             }
+            attempts++;
         }
     }
 
