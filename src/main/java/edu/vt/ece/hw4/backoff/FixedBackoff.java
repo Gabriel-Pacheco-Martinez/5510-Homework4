@@ -4,6 +4,6 @@ public class FixedBackoff implements Backoff{
 
     @Override
     public void backoff(int a) throws InterruptedException {
-        int delay = 100 * a;
+        int delay = 10 * a;
     }
 }

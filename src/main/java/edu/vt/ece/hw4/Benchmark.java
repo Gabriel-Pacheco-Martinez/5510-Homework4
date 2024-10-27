@@ -1,22 +1,21 @@
 package edu.vt.ece.hw4;
 
+import edu.vt.ece.hw4.barriers.ArrayBarrier;
 import edu.vt.ece.hw4.barriers.Barrier;
 import edu.vt.ece.hw4.barriers.TTASBarrier;
 import edu.vt.ece.hw4.bench.*;
-import edu.vt.ece.hw4.locks.ALock;
-import edu.vt.ece.hw4.locks.BackoffLock;
-import edu.vt.ece.hw4.locks.Lock;
-import edu.vt.ece.hw4.locks.MCSLock;
+import edu.vt.ece.hw4.locks.*;
 
 public class Benchmark {
 
     private static final String ALOCK = "ALock";
     private static final String BACKOFFLOCK = "BackoffLock";
     private static final String MCSLOCK = "MCSLock";
+    private static final String TTASLOCK = "TTASLock";
 
     public static void main(String[] args) throws Exception {
-        String mode = args.length <= 0 ? "normal" : args[0];
-        String lockClass = (args.length <= 1 ? ALOCK : args[1]);
+        String mode = args.length <= 0 ? "barrier" : args[0];
+        String lockClass = (args.length <= 1 ? TTASLOCK : args[1]);
         int threadCount = (args.length <= 2 ? 16 : Integer.parseInt(args[2]));
         int totalIters = (args.length <= 3 ? 64000 : Integer.parseInt(args[3]));
         int iters = totalIters / threadCount;
@@ -38,7 +37,12 @@ public class Benchmark {
                 case MCSLOCK:
                     lock = new MCSLock();
                     break;
+                case TTASLOCK:
+                    lock = new TTASLock();
+                    break;
             }
+
+            System.out.println(mode);
 
             switch (mode.trim().toLowerCase()) {
                 case "normal":
@@ -52,8 +56,18 @@ public class Benchmark {
                     runLongCS(lock, threadCount, iters);
                     break;
                 case "barrier":
-                    Barrier b = new TTASBarrier();
-                    throw new UnsupportedOperationException("Complete this.");
+                    //TTAS barrier
+                    Barrier bTTAS = new TTASBarrier();
+                    Lock lockTTAS = new TTASLock();
+                    final Counter counterTTAS = new SharedCounter(0, lockTTAS);
+                    bTTAS.enter(counterTTAS, threadCount, iters);
+
+                    //Array barrier
+                    Barrier bARRAY = new ArrayBarrier();
+                    Lock lockBARRAY = new ArrayLock(threadCount);
+                    final Counter counterARRAY = new SharedCounter(0, lockBARRAY);
+                    bARRAY.enter(counterTTAS, threadCount, iters);
+                    break;
                 default:
                     throw new UnsupportedOperationException("Implement this");
             }

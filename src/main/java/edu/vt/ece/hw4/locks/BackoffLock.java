@@ -16,7 +16,7 @@ public class BackoffLock implements Lock {
     }
 
     @Override
-    public void lock() {
+    public void lock(int id) {
         Backoff backoff = BackoffFactory.getBackoff(this.backoffStrategy);
         int attempts = 1;
         while (true) {
@@ -34,7 +34,7 @@ public class BackoffLock implements Lock {
     }
 
     @Override
-    public void unlock() {
+    public void unlock(int id) {
         state.set(false);
     }
 }

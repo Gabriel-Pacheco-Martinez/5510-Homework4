@@ -23,7 +23,7 @@ public class MCSLock implements Lock {
     }
 
     @Override
-    public void lock() {
+    public void lock(int id) {
         QNode qnode = myNode.get();
         QNode pred = queue.getAndSet(qnode);
         if (pred != null) {
@@ -35,7 +35,7 @@ public class MCSLock implements Lock {
     }
 
     @Override
-    public void unlock() {
+    public void unlock(int id) {
         QNode qnode = myNode.get();
         if (qnode.next == null) {
             if (queue.compareAndSet(qnode, null))

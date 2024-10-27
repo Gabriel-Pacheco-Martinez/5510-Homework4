@@ -15,13 +15,13 @@ public class SharedCounter extends Counter{
     }
 
     @Override
-    public int getAndIncrement() {
-        lock.lock();
+    public int getAndIncrement(int id) {
+        lock.lock(id);
         int temp = -1;
         try {
-            temp = super.getAndIncrement();
+            temp = super.getAndIncrement(id);
         } finally {
-            lock.unlock();
+            lock.unlock(id);
         }
         return temp;
     }

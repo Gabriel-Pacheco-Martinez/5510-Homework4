@@ -21,14 +21,14 @@ public class ALock implements Lock {
     }
 
     @Override
-    public void lock() {
+    public void lock(int id) {
         int slot = tail.getAndIncrement() % size;
         mySlotIndex.set(slot);
         while (! flag[mySlotIndex.get()]) {};
     }
 
     @Override
-    public void unlock() {
+    public void unlock(int id) {
         flag[mySlotIndex.get()] = false;
         flag[(mySlotIndex.get() + 1) % size] = true;
     }

@@ -24,8 +24,8 @@ public class EmptyCSTestThread extends Thread implements ThreadId {
     public void run() {
         long start = System.currentTimeMillis();
         for (int i = 0; i < iter; i++) {
-            lock.lock();
-            lock.unlock();
+            lock.lock(id);
+            lock.unlock(id);
         }
         elapsed = System.currentTimeMillis() - start;
     }

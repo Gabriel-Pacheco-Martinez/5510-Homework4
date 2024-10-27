@@ -3,10 +3,8 @@ package edu.vt.ece.hw4.barriers;
 import edu.vt.ece.hw4.bench.Counter;
 import edu.vt.ece.hw4.bench.TestThread;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
-public class TTASBarrier implements Barrier {
-    public void enter(Counter counter, int threadCount, int iters) throws Exception{
+public class ArrayBarrier implements Barrier{
+    public void enter(Counter counter, int threadCount, int iters) throws Exception {
         final TestThread[] threads = new TestThread[threadCount];
         TestThread.reset();
 
@@ -25,6 +23,6 @@ public class TTASBarrier implements Barrier {
         }
         double avgBarrierTime = ((totalTime/iters)/threadCount);
 
-        System.out.println("TTAS barrier time: " + avgBarrierTime + "ms");
+        System.out.println("Array barrier time: " + avgBarrierTime + "ms");
     }
 }
