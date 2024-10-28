@@ -12,10 +12,13 @@ public class Benchmark {
     private static final String BACKOFFLOCK = "BackoffLock";
     private static final String MCSLOCK = "MCSLock";
     private static final String TTASLOCK = "TTASLock";
+    private static final String SPINSLEEPLOCK = "SpinSleepLock";
+    private static final String TASLOCK = "TASLock";
+    private static final String CLHLOCK = "CLHLock";
 
     public static void main(String[] args) throws Exception {
         String mode = args.length <= 0 ? "normal" : args[0];
-        String lockClass = (args.length <= 1 ? ALOCK : args[1]);
+        String lockClass = (args.length <= 1 ? SPINSLEEPLOCK : args[1]);
         int threadCount = (args.length <= 2 ? 16 : Integer.parseInt(args[2]));
         int totalIters = (args.length <= 3 ? 64000 : Integer.parseInt(args[3]));
         int iters = totalIters / threadCount;
@@ -39,6 +42,15 @@ public class Benchmark {
                     break;
                 case TTASLOCK:
                     lock = new TTASLock();
+                    break;
+                case SPINSLEEPLOCK:
+                    lock = new SpinSleepLock(Integer.parseInt(args[5]));
+                    break;
+                case TASLOCK:
+                    lock = new TASLock();
+                    break;
+                case CLHLOCK:
+                    lock = new CLHLock();
                     break;
             }
 
